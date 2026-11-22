@@ -14,6 +14,7 @@
 | M5 迟报回补 | 固定期初有效日对比两个知悉截面 | `GET /api/backfill` | `app/modules/m5_backfill/service.py` `app/modules/m5_backfill/changes.py` | `tests/test_backfill.py` |
 | M6 期间桥接 | 勾稽总金额和每桶迁移 | `GET /api/bridge` | `app/modules/m6_bridge/ledger.py` `app/modules/m6_bridge/bucket_flow.py` | `tests/test_bridge.py` |
 | M7 快照归档 | 保存、重算和导出证据 | `POST /api/archive` | `app/modules/m7_archive/service.py` `app/modules/m7_archive/export.py` | `tests/test_archive.py` |
+| M8 折扣结算 | 导入条款与回单，按知悉时点确认折扣并发布幂等快照 | `POST /api/settlement/publish` | `app/modules/m8_discount/engine.py` `app/modules/m8_discount/term_rules.py` `app/modules/m8_discount/service.py` | `tests/test_discount.py` |
 
 ## 陷阱登记
 
@@ -37,6 +38,19 @@
 | TRAP-23 | D-V1 与 D-V2 相邻 | 终日重复选中 | 有效区间右开 | `app/modules/m2_versions/book.py` | `tests/test_versions.py::test_adjacent_intervals_exclusive_end` |
 | TRAP-25 | C-OV 与采信版交叠 | 随排序取错发票金额 | 保留早知悉有效版并披露交叠 | `app/modules/m2_versions/rules.py` | `tests/test_versions.py::test_overlap_reject_keeps_prior_version` |
 | TRAP-26 | 测试追加陈旧的 A 修订 | 用旧父版覆盖当前版 | 校验父版可用性 | `app/modules/m2_versions/rules.py` | `tests/test_versions.py::test_stale_parent_cannot_overwrite_new_revision` |
+
+## 折扣结算陷阱
+
+| TRAP | 现象 | 朴素实现会怎样 | 本项目处理 | 处理位置 | 测试 |
+|---|---|---|---|---|---|
+| TRAP-30 | T1-V2 修订在回单知悉次日才到 | 用新费率重算已关账净额 | 按回单知悉时刻取条款版本链，旧条款 2% 不变 | `app/modules/m8_discount/term_book.py` | `tests/test_discount.py::test_revision_known_next_day_does_not_rewrite_closed_period` |
+| TRAP-31 | 回单月末后才录入 | 按录入日选条款，错配窗口 | 付款日定窗口、知悉时刻定条款版本，双轴分离 | `app/modules/m8_discount/engine.py` | `tests/test_discount.py::test_same_settlement_is_stable_under_a_later_cut` |
+| TRAP-32 | 2% 折扣出现半分钱 | 浮点误差导致净额对不上 | 整数分 + `ROUND_HALF_UP`，1250.50 的 2% 为 25.01 | `app/modules/m8_discount/engine.py` | `tests/test_discount.py::test_round_half_up_discount_in_integer_cents` |
+| TRAP-33 | 窗口内却按票面全额回款 | 默认确认折扣 | 判 `DISCOUNT_WINDOW_MISS`，整批推迟发布 | `app/modules/m8_discount/engine.py` | `tests/test_discount.py::test_window_full_face_payment_is_held` |
+| TRAP-34 | 窗口内只回部分款 | 按比例确认部分折扣 | 判 `DISCOUNT_PARTIAL`，不确认整笔折扣 | `app/modules/m8_discount/engine.py` | `tests/test_discount.py::test_partial_payment_in_window_is_held_not_partially_discounted` |
+| TRAP-35 | 同刻两个条款修订 | 后到者覆盖 | 同刻分叉一起隔离，条款停留父版 | `app/modules/m8_discount/term_rules.py` | `tests/test_discount.py::test_term_fork_and_stale_parent_are_quarantined` |
+| TRAP-36 | 重跑同一批回单 | 重复生成结算批次 | 来源与切点摘要做编号，冲突不写入 | `app/modules/m8_discount/repository.py` | `tests/test_discount.py::test_publish_is_idempotent_and_rerun_adds_no_settlement` |
+| TRAP-37 | 发布写库中断 | 半条结算覆盖旧版 | 单事务回滚，旧版快照保留后可继续 | `app/modules/m8_discount/service.py` | `tests/test_discount.py::test_interrupted_write_keeps_previous_version` |
 
 ## 对账断言
 

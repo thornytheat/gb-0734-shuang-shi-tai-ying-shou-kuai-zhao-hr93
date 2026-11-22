@@ -6,6 +6,7 @@ SAMPLE = APP_DIR.parent / "sample_data" / "receivable.csv"
 MAX_BYTES = 2 * 1024 * 1024
 MAX_ROWS = 5000
 RULE_VERSION = "ar-bitemporal-1"
+SETTLEMENT_RULE_VERSION = "ar-discount-settle-1"
 DISPLAY_ZONE = "+08:00"
 
 

@@ -86,3 +86,9 @@ dialog::backdrop { background: #081610bf; }
   .axis-label strong { font-size: 10px; }
   .axis-tick:nth-child(even) { display: none; }
 }
+#settle-upload { grid-template-columns: repeat(2, minmax(0, 1fr)) auto; }
+#settle-run { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; margin: 0; }
+#settle-run .field { display: flex; flex-direction: column; gap: 4px; }
+#settle-run .btn { min-height: 32px; }
+.row-actions { display: inline-flex; gap: 8px; align-items: center; }
+.row-actions .btn { text-decoration: none; }

@@ -1,5 +1,6 @@
 import { axis, localInstant } from './axis.js';
 import * as view from './views.js';
+import * as settlement from './settlement.js';
 
 const { $ } = view;
 const state = {source: null, page: 'snapshot', cut: null, runs: [], selected: null, token: 0, busy: false, exact: {}};
@@ -95,6 +96,9 @@ async function refresh() {
       axis($('axis-known'), 'known', state.source.axis.known, data.cut.known, (stamp) => pick('known', stamp));
     } else if (page === 'intake') {
       view.intake(state.source);
+    } else if (page === 'settlement') {
+      settlement.show(state.source);
+      return;
     } else {
       const data = await request(`/api/${page}?${query}`);
       if (token !== state.token) return;
@@ -143,6 +147,7 @@ async function setSource(source) {
   state.source = source;
   state.runs = [];
   setSelection(null);
+  settlement.setArSource(source);
   $('source-meta').textContent = source.source_id.slice(0, 12);
   await refresh();
 }

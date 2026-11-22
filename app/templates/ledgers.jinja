@@ -25,3 +25,25 @@
   <section class="panel wide-panel"><div class="panel-head"><h2>归档批次</h2><button id="rerun" class="btn" type="button" disabled>重跑归档</button></div><div id="archive-list" class="scroll-table"></div></section>
   <section class="panel"><div class="panel-head"><h2>运行清单</h2></div><div id="archive-detail" class="panel-body"><p class="empty">请选择归档批次</p></div></section>
 </section>
+<section data-page="settlement" class="grid ledger-grid" hidden>
+  <section class="panel span-all"><div class="panel-head"><h2>折扣结算来源</h2><span class="subtle">条款版本 / 收款回单 · 原字节留痕</span></div>
+    <div class="panel-body"><form id="settle-upload" class="upload-form">
+      <label class="field">条款 CSV<input type="file" name="term" accept=".csv,text/csv"></label>
+      <label class="field">回单 CSV<input type="file" name="receipt" accept=".csv,text/csv"></label>
+      <button class="btn btn-primary" type="submit">导入来源</button>
+    </form><div id="settle-sources"></div></div>
+  </section>
+  <section class="panel span-all"><div class="panel-head"><h2>折扣结算快照</h2>
+      <form id="settle-run" class="upload-form">
+        <label class="field">知悉截止<input type="datetime-local" step="0.001" name="known" value="2026-02-06T12:00" required></label>
+        <button class="btn" type="submit" name="action" value="preview">预览快照</button>
+        <button class="btn btn-primary" type="submit" name="action" value="publish">发布快照</button>
+      </form></div>
+    <div id="settle-status" class="panel-body"></div>
+    <div id="settle-summary"></div>
+    <div id="settle-invoices" class="scroll-table"></div>
+  </section>
+  <section class="panel wide-panel"><div class="panel-head"><h2>推迟发布的回单</h2><span class="subtle">折扣与回单解释不通</span></div><div id="settle-held" class="scroll-table"></div></section>
+  <section class="panel"><div class="panel-head"><h2>条款版本冲突与收件隔离</h2></div><div id="settle-term-issues" class="scroll-table"></div></section>
+  <section class="panel span-all"><div class="panel-head"><h2>已发布结算批次</h2><button id="settle-refresh" class="btn" type="button">刷新批次</button></div><div id="settle-runs" class="scroll-table"></div></section>
+</section>

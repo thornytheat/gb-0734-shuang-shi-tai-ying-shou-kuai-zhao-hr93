@@ -14,6 +14,19 @@ CREATE TABLE IF NOT EXISTS archives (
   result_digest TEXT NOT NULL, payload BLOB NOT NULL
 );
 CREATE INDEX IF NOT EXISTS archives_time ON archives(generated_at DESC, run_id);
+CREATE TABLE IF NOT EXISTS settlement_sources (
+  source_id TEXT NOT NULL, stream TEXT NOT NULL, content BLOB NOT NULL,
+  PRIMARY KEY (source_id, stream)
+);
+CREATE TABLE IF NOT EXISTS settlements (
+  run_id TEXT PRIMARY KEY,
+  ar_source_id TEXT NOT NULL REFERENCES sources(source_id),
+  term_source_id TEXT NOT NULL,
+  receipt_source_id TEXT NOT NULL,
+  rule_version TEXT NOT NULL, generated_at TEXT NOT NULL, elapsed_ms INTEGER NOT NULL,
+  result_digest TEXT NOT NULL, payload BLOB NOT NULL
+);
+CREATE INDEX IF NOT EXISTS settlements_time ON settlements(generated_at DESC, run_id);
 """
 
 

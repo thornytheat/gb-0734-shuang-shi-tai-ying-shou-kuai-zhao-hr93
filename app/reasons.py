@@ -20,6 +20,19 @@ REASONS = {
     "TARGET_SCOPE": "引用版本与发票、客户或有效日不匹配",
     "NO_ACTIVE_VERSION": "变更有效日无可用版本",
     "EXCEEDS_BALANCE": "本笔变更超过可冲减余额",
+    "TERM_PARENT": "被替换条款在此知悉时点不可用",
+    "TERM_SCOPE": "修订条款的发票或客户与父版不匹配",
+    "TERM_FORK": "同一时刻有多个条款版本替换同一父版",
+    "TERM_ROOT_CONFLICT": "同一发票已有生效条款，初版条款不得重复开立",
+    "TERM_TARGET_PENDING": "条款引用的原票版本尚未可见",
+    "TERM_TARGET_INVALID": "条款引用事件无法作为原票版本",
+    "TERM_TARGET_SCOPE": "条款引用版本与发票、客户不匹配",
+    "TERM_NOT_KNOWN": "回单知悉时该折扣条款尚未到达",
+    "DISCOUNT_WINDOW_MISS": "回单业务日落入条款折扣窗口却未取得可解释折扣",
+    "DISCOUNT_MISMATCH": "实收金额与票面减折扣后的净额对不上",
+    "DISCOUNT_RATE_MISMATCH": "折扣金额与条款约定费率对不上",
+    "DISCOUNT_PARTIAL": "折扣期内仅收到部分回款，无法确认整笔折扣",
+    "SETTLEMENT_HELD": "存在不可解释的折扣或回单，结算快照已推迟发布",
 }
 
 
